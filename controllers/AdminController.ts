@@ -4,11 +4,15 @@ import { Vendor } from "../models";
 import { generatePassword, generateSalt } from "../utility";
 
 
+export const findVendor =  async (id: string | undefined, email?: string) => {
+    return await Vendor.findOne({ email }) || await Vendor.findById(id)
+}
+
 export const createVendor = async (req: Request, res: Response, next: NextFunction) => {
 
     const data = <CreateVendorInput>req.body
     
-    const existingVendor = await Vendor.findOne({ email: data.email })
+    const existingVendor = await findVendor('', data.email)
 
     if(existingVendor) return res.json({ "message": "Vendor with that email ID exist."})
     
@@ -30,11 +34,20 @@ export const createVendor = async (req: Request, res: Response, next: NextFuncti
 }
 
 export const getVendors = async (req: Request, res: Response, next: NextFunction) => {
-    const data = { hello: "get vendors"}
-    return res.json(data)
+    const vendors = await Vendor.find()
+
+    if(vendors !== null){
+        return res.json(vendors)
+    }
+    return res.json({"message":"Vendors data not available"})
 }
 
 export const getVendorById = async (req: Request, res: Response, next: NextFunction) => {
-    const data = { hello: "get vendors with IDs"}
-    return res.json(data)
+    const vendorID = req.params.id
+
+    const vendor = await findVendor(vendorID)
+
+    if(vendor !== null) return res.json(vendor)
+
+    return res.json({"message":"Vendor data does not exist"})
 }
