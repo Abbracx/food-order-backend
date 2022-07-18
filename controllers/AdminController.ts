@@ -5,7 +5,17 @@ import { generatePassword, generateSalt } from "../utility";
 
 
 export const findVendor =  async (id: string | undefined, email?: string) => {
-    return await Vendor.findOne({ email }) || await Vendor.findById(id)
+    
+        // return await Vendor.findOne({ email }) || await Vendor.findById(id)
+        try {
+
+            if(email) return await Vendor.findOne({ email })
+
+            return await Vendor.findById(id)
+
+        }catch(error){
+            throw new Error((error as Error).message)
+        }
 }
 
 export const createVendor = async (req: Request, res: Response, next: NextFunction) => {
