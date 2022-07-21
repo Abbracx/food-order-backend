@@ -18,8 +18,8 @@ export const validatePassword = async (enteredPWD: string, savedPWD: string, sal
     return await generatePassword(enteredPWD, salt) === savedPWD
 }
 
-export const generateSignature = async (payload: VendorPayload) => {
-    console.log(APP_SECRET)
+export const generateSignature = async (payload: AuthPayload) => {
+    // generate signature that expires in 1 day
     return jwt.sign(payload, APP_SECRET as Secret, { expiresIn: "1d"} )
 }
 
