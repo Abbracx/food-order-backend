@@ -1,26 +1,29 @@
 import { Router, Request, Response, NextFunction } from "express"
-import { CustomerLogin, CustomerRequestOTP, CustomerSigup, CustomerVerify, EditCustomerProfile, GetCustomerProfile } from "../controllers"
+import { CustomerLogin, CustomerRequestOTP, CustomerSignup, CustomerVerify, EditCustomerProfile, GetCustomerProfile } from "../controllers"
+import { Authenticate } from "../middlewares"
 
 const router = Router()
 
 /*-------------------SignUp / Create Customer-----------------*/ 
-router.post('/signup', CustomerSigup)
+router.post('/signup', CustomerSignup)
 
 /*-------------------Login-----------------*/ 
 router.post('/login', CustomerLogin)
 
 /*-------------------Verify Customer Account-----------------*/ 
 
-router.patch('/verify', CustomerVerify)
+// Authenticate
+// router.use(Authenticate)
+router.patch('/verify',Authenticate, CustomerVerify)
 
 /*-------------------OTP / Requesting OTP-----------------*/ 
 
-router.get('/otp', CustomerRequestOTP)
+router.get('/otp', Authenticate, CustomerRequestOTP)
 
 /*-------------------Profile-----------------*/ 
-router.get('/profile', GetCustomerProfile)
+router.get('/profile', Authenticate, GetCustomerProfile)
 
-router.patch('/profile', EditCustomerProfile)
+router.patch('/profile', Authenticate, EditCustomerProfile)
 
 
 //Cart
