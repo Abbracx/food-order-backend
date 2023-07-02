@@ -13,6 +13,8 @@ interface CustomerDoc extends Document {
     otp_expiry: Date;
     lng: number;
     lat: number;
+    cart: [any];
+    orders: [OrderDoc]
 
 }
 
@@ -29,6 +31,18 @@ const CustomerSchema = new Schema({
     otp_expiry: { type: Date, required: true },
     lng: { type: Number, required: true },
     lat: { type: Number, required: true },
+    cart: [
+        {
+            food: { type: Schema.Types.ObjectId, ref: 'food', require: true },
+            unit: { type: Number, require: true }
+        }
+    ],
+    orders: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'order'
+        }
+    ]
 }, {
     toJSON: {
         transform(doc, ret){
