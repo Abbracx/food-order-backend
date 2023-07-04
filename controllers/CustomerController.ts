@@ -2,8 +2,9 @@ import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { Request, Response, NextFunction } from "express";
 import { CreateCustomerInputs, UserLoginInputs, EditCustomerProfileInputs, OrderInputs } from "../dto";
-import { Customer, Food } from "../models";
+import { Customer, CustomerDoc, Food } from "../models";
 import { generateOTP, generatePassword, generateSalt, generateSignature, onRequestOTP, validatePassword } from "../utility";
+import { Order } from "../models/Order";
 
 
 // Signup controller
@@ -185,7 +186,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
 
     if(customer){
         // fetch customer and populate his cart array
-       const profile =  await Customer.findById(customer._id).populate('cart, food')
+       const profile =  await Customer.findById(customer._id).populate('cart.food')
        let cartItems = Array()
 
        const { _id, unit } = <OrderInputs>req.body
@@ -268,14 +269,16 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
         const cart = <[OrderInputs]>req.body;
 
-        let cartItems = Array()
+        let cartItems = Array();
         let netAmount = 0.0;
+        let vendorId;
 
         const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
 
         foods.map(food => {
             cart.map(({ _id, unit }) => {
                 if (food._id == _id) {
+                    vendorId = food.vendorId
                     netAmount += food.price * unit;
                     cartItems.push({ food, unit: unit })
                 } else {
@@ -287,14 +290,21 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
         if(cartItems) {
             const currentOrder = await Order.create({
                 orderID: orderId,
+                vendorId: vendorId,
                 items: cartItems,
                 totalAmount: netAmount,
                 orderDate: new Date(),
                 paidThrough: "COD",
                 paymentResponse: "Some json response stringify",
-                orderStatus: "waiting"
-            })
+                orderStatus: "waiting",
+                remarks: '',
+                deliveryId: '',
+                appliedOffer: false,
+                offerId: null,
+                readyTime: 45
+            });
 
+            (profile as CustomerDoc).cart = [] as any;
             profile?.orders.push(currentOrder);
             const profileSaveResponse = await profile?.save();
             res.status(200).json(profileSaveResponse);

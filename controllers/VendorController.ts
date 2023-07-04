@@ -4,6 +4,7 @@ import { EditVendorInput, LoginVendorInput } from '../dto';
 import { CreateFoodInputs } from '../dto/Food.dto';
 import { Food } from '../models/Food';
 import { generateSignature, validatePassword } from '../utility';
+import { Order } from '../models/Order';
 
 export const VendorLogin = async ( req: Request, res: Response, next: NextFunction) => {
     const { email, password } = <LoginVendorInput>req.body
@@ -136,13 +137,57 @@ export const GetFoods = async ( req: Request, res: Response, next: NextFunction)
     return res.json({ "message": "Food info not found" })
 } 
 
-// export const GetCurrentOrders = async (req: Request, res: Response, next: NextFunction) => {
+export const GetCurrentOrders = async (req: Request, res: Response, next: NextFunction) => {
 
-    
-// }
+    const user = req.user
+
+    if(user){
+        const orders = await Order.find({ vendorId: user._id }).populate('items.food');
+
+        if(orders !== null){
+            return res.status(200).json(orders)
+        }
+    }
+    return res.json({message: "Order not found"})
+} 
 
 
-// export const GetOrderDetails = async (req: Request, res: Response, next: NextFunction) => {}
+export const GetOrderDetails = async (req: Request, res: Response, next: NextFunction) => {
+
+    const orderId = req.params.id
+
+    if(orderId){
+        const order = await Order.findById(orderId).populate('items.food');
+
+        if(order !== null){
+            return res.status(200).json(order)
+        }
+    }
+    return res.json({message: "Order not found"})
+}
 
 
-// export const ProcessOrder = async (req: Request, res: Response, next: NextFunction) => {}
+export const ProcessOrder = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { status, remarks, time } = req.body;
+    const orderId = req.params.id;
+
+
+    if(orderId){
+
+        const order = await Order.findById(orderId).populate('food');
+
+        if(order){
+            order.orderStatus = status;
+            order.remarks = remarks;
+            if(time){
+                order.readyTime = time;
+            }
+            const orderResult = await order.save()
+            if( orderResult !== null ){
+                return res.status(200).json(orderResult)
+            }
+        }
+    }
+    return res.json({message: "Unable to process order"})
+}

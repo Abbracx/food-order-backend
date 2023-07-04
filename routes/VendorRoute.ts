@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express"
-import { AddFood, GetFoods, GetOrderDetails, GetOrders, GetVendorProfile, ProcessOrder, UpdateVendorCoverImage, UpdateVendorProfile, UpdateVendorService, VendorLogin } from "../controllers"
+import { AddFood, GetCurrentOrders, GetFoods, GetOrderDetails, GetOrders, GetVendorProfile, ProcessOrder, UpdateVendorCoverImage, UpdateVendorProfile, UpdateVendorService, VendorLogin } from "../controllers"
 import { Authenticate } from "../middlewares"
 import multer from "multer";
 
@@ -30,9 +30,10 @@ router.post('/food', Authenticate, images, AddFood)
 router.get('/foods', Authenticate, GetFoods)
 
 // Orders 
-// router.post('/orders', Authenticate, GetCurrentOrders)
-// router.get('/order/:id/process', Authenticate, ProcessOrder)
-// router.post('/order/:id', Authenticate, images, GetOrderDetails)
+router.post('/orders', Authenticate, GetCurrentOrders)
+router.get('/order/:id/process', Authenticate, ProcessOrder)
+router.post('/order/:id', Authenticate, GetOrderDetails)
+
 
 
 router.get('/',(req: Request, res: Response, next: NextFunction) => {
