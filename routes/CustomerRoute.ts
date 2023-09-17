@@ -26,7 +26,6 @@ router.get('/otp', Authenticate, CustomerRequestOTP)
 
 /*-------------------Profile-----------------*/
 router.get('/profile', Authenticate, GetCustomerProfile)
-
 router.patch('/profile', Authenticate, EditCustomerProfile)
 
 
