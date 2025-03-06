@@ -12,7 +12,7 @@ export const VendorLogin = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<Response> => {
   const { email, password } = <LoginVendorInput>req.body;
 
   const existingVendor = await findVendor("", email);
@@ -27,7 +27,7 @@ export const VendorLogin = async (
 
     if (validation) {
       const signature = await generateSignature({
-        _id: existingVendor._id,
+        _id: existingVendor._id as string,
         name: existingVendor.name,
         email: existingVendor.email,
         foodTypes: existingVendor.foodType,
@@ -45,7 +45,7 @@ export const GetVendorProfile = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<void | Response<any, Record<string, any>>> => {
   const user = req.user;
   if (user) {
     const existingVendor = await findVendor(user._id);
