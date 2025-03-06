@@ -40,7 +40,13 @@ export class EditCustomerProfileInputs {
     address: string
 }
 
-export class OrderInputs {
+export class  CartItem {
     _id: string
     unit: number
+}
+
+export class  OrderInputs {
+    txnId: string
+    amount: string
+    items: [CartItem]
 }
