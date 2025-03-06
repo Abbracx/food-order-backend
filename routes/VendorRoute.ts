@@ -18,27 +18,39 @@ const imageStorage = multer.diskStorage({
 
 const images = multer({ storage: imageStorage}).array('images', 10)
 
+// @ts-ignore
 router.post('/login', VendorLogin)
 
 // router.use(Authenticate);
+// @ts-ignore
 router.get('/profile', Authenticate, GetVendorProfile)
+// @ts-ignore
 router.patch('/profile', Authenticate, UpdateVendorProfile)
+// @ts-ignore
 router.patch('/coverimage', Authenticate, images, UpdateVendorCoverImage)
-router.patch('/services',Authenticate, UpdateVendorService)
+// @ts-ignore
+router.patch('/services',Authenticate, UpdateVendorService) 
 
-
+// @ts-ignore
 router.post('/food', Authenticate, images, AddFood)
+// @ts-ignore
 router.get('/foods', Authenticate, GetFoods)
 
 // Orders 
+// @ts-ignore
 router.post('/orders', Authenticate, GetCurrentOrders)
+// @ts-ignore
 router.put('/order/:id/process', Authenticate, ProcessOrder)
+// @ts-ignore
 router.post('/order/:id', Authenticate, GetOrderDetails)
 
 
 //Offers
+// @ts-ignore
 router.get("/offers", GetOffers); 
+// @ts-ignore
 router.post("/offer", AddOffer);
+// @ts-ignore
 router.put("/offer/:id", EditOffer);
 
 
