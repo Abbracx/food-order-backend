@@ -59,6 +59,7 @@ export const CustomerSignup = async (
     verified: false,
     lng: 0,
     lat: 0,
+    orders: []
   });
 
   if (result) {
@@ -107,7 +108,7 @@ export const CustomerLogin = async (
       customer.password,
       customer.salt
     );
-
+  
     if (validation) {
       const signature = await generateSignature({
         _id: customer._id as string,

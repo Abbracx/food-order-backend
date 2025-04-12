@@ -16,7 +16,7 @@ export const GetFoodAvailability = async (
   })
     .sort({ rating: -1 })
     .populate("foods");
-
+ 
   if (result.length > 0) {
     return res.status(200).json(result);
   }
@@ -96,7 +96,7 @@ export const RestaurantById = async (
   const restaurantID = req.params.id;
 
   const result = await Vendor.findById(restaurantID).populate("foods");
-  console.log(result);
+
   if (result) {
     return res.status(200).json(result);
   }

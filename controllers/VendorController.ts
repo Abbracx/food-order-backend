@@ -309,7 +309,7 @@ export const AddOffer = async (
       return res.status(200).json(offer);
     }
   }
-  return res.status(401).json({ message: "Unable to get offers" });
+  return res.status(401).json({ message: "Unable to Add offers" });
 };
 
 export const EditOffer = async (
