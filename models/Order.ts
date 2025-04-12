@@ -8,7 +8,7 @@ export interface OrderDoc extends Document {
     orderDate: Date, // Date
     paidThrough: string, // COD, CARD, NET BANKING, WALLET,
     paymentResponse: string, // { Long response object for charge back scenario }
-    orderStatus: string // waiting, preparing, onway, delivered, cancelled, failed
+    orderStatus: string // waiting, failed, ACCEPT, REJECT, UNDER-PROCESS, READY, ON-THE-WAY, DELIVERED, CANCELLED
     remarks: string,
     deliveryId: string,
     appliedOffers: boolean,

@@ -5,9 +5,11 @@ import { createVendor, getVendors, getVendorById } from "../controllers"
 
 const router = Router()
 
-
+// @ts-ignore
 router.post('/vendors', createVendor)
+// @ts-ignore
 router.get('/vendors', getVendors)
+// @ts-ignore
 router.get('/vendors/:id', getVendorById)
 
 router.get('/',(req: Request, res: Response, next: NextFunction) => {
